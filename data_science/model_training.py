@@ -18,7 +18,6 @@ RANDOM_SEED = config.getint('data_science', 'random_seed')
 DATA_PATH = config.get('data_science', 'data_path')
 MODEL_PATH = config.get('data_science', 'model_path')
 PREPROCESSOR_PATH = config.get('data_science', 'preprocessor_path')
-
 PLOTS_FILENAME = "customer_clusters.png"
 PLOTS_DIR = 'plots'
 
