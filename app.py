@@ -4,7 +4,7 @@ import pickle
 import pandas as pd
 import os
 
-app = Flask(__name__, static_folder='static') # Important for static files
+app = Flask(__name__, template_folder='templates') # Important for static files
 CORS(app)
 
 DEBUG = os.environ.get("FLASK_DEBUG", "False").lower() == "true" # Set to false in production
