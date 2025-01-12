@@ -32,7 +32,7 @@ except FileNotFoundError as e:
 
 @app.route('/', methods=['GET']) #Serve the html
 def index():
-    return render_template('index.html')
+    return render_template('index.html', api_url=url_for('predict', _external=True))
 
 @app.route('/predict', methods=['POST'])
 def predict():
