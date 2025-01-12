@@ -1,0 +1,7 @@
+Flask
+Flask-CORS
+pandas
+scikit-learn
+numpy
+matplotlib  # Only if needed on the server (usually not)
+gunicorn

@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, url_for
 from flask_cors import CORS
 import pickle
 import pandas as pd
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static') # Important for static files
 CORS(app)
 
-# Use absolute paths or relative paths from the app.py location
+DEBUG = os.environ.get("FLASK_DEBUG", "False").lower() == "true" # Set to false in production
+PORT = int(os.environ.get("PORT", 5000))
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_SCIENCE_DIR = os.path.join(BASE_DIR, 'data_science')
 FILE_NAME_PROCESSOR = os.path.join(DATA_SCIENCE_DIR, 'customer_segmentation_preprocessor.sav')
@@ -54,4 +56,4 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=DEBUG, port=PORT, host="0.0.0.0") #Important for Render
