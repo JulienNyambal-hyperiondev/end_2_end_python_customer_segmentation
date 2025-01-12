@@ -6,31 +6,23 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import pickle
 import os
+from synthetic_data_generation import generate_synthetic_data
+import configparser
 
-RANDOM_SEED = 42
-FILE_NAME_PROCESSOR = 'customer_segmentation_preprocessor.sav'
-FILENAME_MODEL = 'customer_segmentation_model.sav'
+# Load configuration
+config = configparser.ConfigParser()
+config.read('../config.ini')
+
+# Get configuration values
+RANDOM_SEED = config.getint('data_science', 'random_seed')
+DATA_PATH = config.get('data_science', 'data_path')
+MODEL_PATH = config.get('data_science', 'model_path')
+PREPROCESSOR_PATH = config.get('data_science', 'preprocessor_path')
+
 PLOTS_FILENAME = "customer_clusters.png"
 PLOTS_DIR = 'plots'
 
-# Generate Synthetic Data (2000 data points)
-np.random.seed(RANDOM_SEED)  # for reproducibility
-
-n_samples = 5000
-
-areas = ['North London', 'South London', 'East London', 'West London', 'Central London']
-amounts_spent = np.random.uniform(1000.0, 100000.0, size=n_samples)  # £1,000.0 to £100,000.0 (float)
-tenures = np.random.uniform(1, 20, size=n_samples)  # 1 to 20 years
-qualifications = ['High School', 'Bachelor', 'Masters', 'PhD']
-
-data = {
-    'area': np.random.choice(areas, size=n_samples),
-    'amount_spent': amounts_spent,
-    'tenure': tenures,
-    'qualification': np.random.choice(qualifications, size=n_samples)
-}
-
-df = pd.DataFrame(data)
+df = pd.DataFrame(generate_synthetic_data())
 
 # Preprocessing
 preprocessor = ColumnTransformer(
@@ -62,10 +54,9 @@ df['cluster_label'] = df['cluster'].map(cluster_labels)
 print("\nCluster Labels:\n", cluster_labels)
 
 # Save the model and preprocessor
-filename_model = FILENAME_MODEL
-pickle.dump(kmeans, open(filename_model, 'wb'))
+pickle.dump(kmeans, open(MODEL_PATH, 'wb'))
 
-filename_preprocessor = FILE_NAME_PROCESSOR
+filename_preprocessor = PREPROCESSOR_PATH
 pickle.dump(preprocessor, open(filename_preprocessor, 'wb'))
 
 # Visualization (using only two numerical features for plotting)
