@@ -2,24 +2,28 @@ from flask import Flask, request, jsonify, render_template, url_for
 from flask_cors import CORS
 import pickle
 import pandas as pd
-import os
+import configparser
+
+# Load configuration
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 app = Flask(__name__, template_folder='templates') # Important for static files
 CORS(app)
 
-DEBUG = os.environ.get("FLASK_DEBUG", "False").lower() == "true" # Set to false in production
-PORT = int(os.environ.get("PORT", 5000))
+# Get configuration values
+DEBUG = config.getboolean('flask', 'debug')
+PORT = config.getint('flask', 'port')
+HOST = config.get('flask', 'host')
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_SCIENCE_DIR = os.path.join(BASE_DIR, 'data_science')
-FILE_NAME_PROCESSOR = os.path.join(DATA_SCIENCE_DIR, 'customer_segmentation_preprocessor.sav')
-FILENAME_MODEL = os.path.join(DATA_SCIENCE_DIR, 'customer_segmentation_model.sav')
-FILENAME_DATA = os.path.join(DATA_SCIENCE_DIR, 'customer_data_with_clusters.csv')
+MODEL_PATH = config.get('data_science', 'model_path')
+PREPROCESSOR_PATH = config.get('data_science', 'preprocessor_path')
+DATA_PATH = config.get('data_science', 'data_path')
 
 try:
-    kmeans = pickle.load(open(FILENAME_MODEL, 'rb'))
-    preprocessor = pickle.load(open(FILE_NAME_PROCESSOR, 'rb'))
-    cluster_means = pd.read_csv(FILENAME_DATA)
+    kmeans = pickle.load(open(MODEL_PATH, 'rb'))
+    preprocessor = pickle.load(open(PREPROCESSOR_PATH, 'rb'))
+    cluster_means = pd.read_csv(DATA_PATH)
     cluster_means = cluster_means.groupby('cluster').mean(numeric_only=True)
     cluster_labels = {}
     sorted_clusters = cluster_means.sort_values('amount_spent').index.tolist()
