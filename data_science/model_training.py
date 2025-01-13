@@ -52,8 +52,6 @@ cluster_labels[sorted_clusters[2]] = 'High Income'
 df['cluster_label'] = df['cluster'].map(cluster_labels)
 print("\nCluster Labels:\n", cluster_labels)
 
-print("888888888888889999999999999", MODEL_PATH)
-
 # Save the model and preprocessor
 pickle.dump(kmeans, open(MODEL_PATH, 'wb'))
 
@@ -94,4 +92,4 @@ example_label = cluster_labels.get(example_cluster[0])
 print(f'\nExample data belongs to cluster: {example_cluster} ({example_label})')
 
 # Save the DataFrame (Optional)
-df.to_csv('customer_data_with_clusters.csv', index=False)
+df.to_csv(DATA_PATH, index=False)
