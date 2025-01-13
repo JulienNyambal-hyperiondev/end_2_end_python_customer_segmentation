@@ -1,13 +1,13 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import pickle
 import os
-from synthetic_data_generation import generate_synthetic_data
 import configparser
+from synthetic_data_generation import generate_synthetic_data
+
 
 # Load configuration
 config = configparser.ConfigParser()
@@ -15,9 +15,9 @@ config.read('../config.ini')
 
 # Get configuration values
 RANDOM_SEED = config.getint('data_science', 'random_seed')
-DATA_PATH = config.get('data_science', 'data_path')
-MODEL_PATH = config.get('data_science', 'model_path')
-PREPROCESSOR_PATH = config.get('data_science', 'preprocessor_path')
+DATA_PATH = f"../{config.get('data_science', 'data_path')}"
+MODEL_PATH = f"../{config.get('data_science', 'model_path')}"
+PREPROCESSOR_PATH = f"../{config.get('data_science', 'preprocessor_path')}"
 PLOTS_FILENAME = "customer_clusters.png"
 PLOTS_DIR = 'plots'
 
@@ -51,6 +51,8 @@ cluster_labels[sorted_clusters[2]] = 'High Income'
 
 df['cluster_label'] = df['cluster'].map(cluster_labels)
 print("\nCluster Labels:\n", cluster_labels)
+
+print("888888888888889999999999999", MODEL_PATH)
 
 # Save the model and preprocessor
 pickle.dump(kmeans, open(MODEL_PATH, 'wb'))
